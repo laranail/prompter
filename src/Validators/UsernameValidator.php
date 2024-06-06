@@ -9,9 +9,9 @@ namespace Simtabi\Laranail\Prompter\Validators;
  */
 class UsernameValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null)
+    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'username');
+        parent::__construct($errorMessage, 'username', $replace, $locale);
     }
 
     public function validate(mixed $value): ?string

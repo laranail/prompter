@@ -9,9 +9,9 @@ namespace Simtabi\Laranail\Prompter\Validators;
  */
 class TextFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null)
+    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'text');
+        parent::__construct($errorMessage, 'text', $replace, $locale);
     }
 
     public function validate(mixed $value): ?string

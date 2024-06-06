@@ -9,9 +9,9 @@ namespace Simtabi\Laranail\Prompter\Validators;
  */
 class TimeFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null)
+    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'time');
+        parent::__construct($errorMessage, 'time', $replace, $locale);
     }
 
     public function validate(mixed $value): ?string

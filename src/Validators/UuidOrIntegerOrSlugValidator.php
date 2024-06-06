@@ -13,12 +13,11 @@ class UuidOrIntegerOrSlugValidator extends AbstractValidator
 {
     protected string $uuidVersion;
 
-    public function __construct(?string $errorMessage = null, string $uuidVersion = 'uuid')
+    public function __construct(string $uuidVersion = 'uuid', ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'uuid_or_integer_or_slug');
+        parent::__construct($errorMessage, 'uuid_or_integer_or_slug', $replace, $locale);
         $this->uuidVersion = $uuidVersion;
     }
-
     public function validate(mixed $value): ?string
     {
         if ($this->isUuid($value) || $this->isInteger($value) || $this->isSlug($value)) {

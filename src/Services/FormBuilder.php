@@ -63,45 +63,10 @@ class FormBuilder
     public function addField(string $name, FormField $formField): self
     {
         if (!$formField->validator && !$formField->customValidator) {
-            $formField->validator = $this->getDefaultValidator($formField->type);
+            $formField->validator = FieldType::getDefaultValidator($formField->type);
         }
         $this->fields[$name] = $formField;
         return $this;
-    }
-
-    /**
-     * Get the default validator for a given field type.
-     *
-     * @param FieldType $type The type of the form field.
-     * @return ValidatorInterface
-     * @throws PrompterException
-     */
-    protected function getDefaultValidator(FieldType $type): ValidatorInterface
-    {
-        return match ($type) {
-            FieldType::TEXT => new TextFieldValidator(),
-            FieldType::NUMBER => new NumberFieldValidator(),
-            FieldType::EMAIL => new EmailFieldValidator(),
-            FieldType::PASSWORD => new PasswordFieldValidator(),
-            FieldType::TEXTAREA => new TextAreaFieldValidator(),
-            FieldType::DATE => new DateFieldValidator(),
-            FieldType::TIME => new TimeFieldValidator(),
-            FieldType::SELECT => new SelectFieldValidator([]),
-            FieldType::CHECKBOX => new CheckboxFieldValidator(),
-            FieldType::RADIO => new RadioFieldValidator([]),
-            FieldType::PATH => new PathFieldValidator(),
-            FieldType::USERNAME => new UsernameValidator(),
-            FieldType::PHONE => new PhoneNumberValidator(),
-            FieldType::COLOR => new ColorValidator(),
-            FieldType::NULL_OR_EMPTY => new NullOrEmptyValidator(),
-            FieldType::ARRAY => new ArrayValidator(),
-            FieldType::OBJECT => new ObjectValidator(),
-            FieldType::UUID => new UUIDFieldValidator(),
-            FieldType::ALPHA => new AlphaValidator(),
-            FieldType::ALPHANUMERIC => new AlphanumericValidator(),
-            FieldType::UUID_OR_INTEGER_OR_SLUG => new UuidOrIntegerOrSlugValidator(),
-            default => throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $type]),
-        };
     }
 
     /**
@@ -127,35 +92,6 @@ class FormBuilder
      */
     protected function addFieldToForm(string $name, FormField $formField): void
     {
-        $methods = [
-            FieldType::TEXT->value => 'text',
-            FieldType::NUMBER->value => 'number',
-            FieldType::EMAIL->value => 'email',
-            FieldType::PASSWORD->value => 'password',
-            FieldType::TEXTAREA->value => 'textarea',
-            FieldType::DATE->value => 'date',
-            FieldType::TIME->value => 'time',
-            FieldType::SELECT->value => 'select',
-            FieldType::CHECKBOX->value => 'checkbox',
-            FieldType::RADIO->value => 'radio',
-            FieldType::PATH->value => 'text',
-            FieldType::USERNAME->value => 'text', // Assuming form method supports text for username
-            FieldType::PHONE->value => 'text', // Assuming form method supports text for phone
-            FieldType::COLOR->value => 'text', // Assuming form method supports text for color
-            FieldType::NULL_OR_EMPTY->value => 'text', // Assuming form method supports text for null/empty
-            FieldType::ARRAY->value => 'textarea', // Assuming form method supports textarea for array
-            FieldType::OBJECT->value => 'textarea', // Assuming form method supports textarea for object
-            FieldType::UUID->value => 'text', // Assuming form method supports text for uuid
-            FieldType::ALPHA->value => 'text', // Assuming form method supports text for alpha
-            FieldType::ALPHANUMERIC->value => 'text', // Assuming form method supports text for alphanumeric
-            FieldType::UUID_OR_INTEGER_OR_SLUG->value => 'text', // Assuming form method supports text for uuid_or_integer_or_slug
-        ];
-
-        if (!isset($methods[$formField->type->value])) {
-            throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $formField->type->value]);
-        }
-
-        $method = $methods[$formField->type->value];
         $parameters = [
             'label' => $formField->label,
             'placeholder' => $formField->placeholder,
@@ -178,6 +114,7 @@ class FormBuilder
             $parameters['options'] = $formField->options ?? [];
         }
 
+        $method = FieldType::getValidatorMethod($formField);
         $this->form->$method(...$parameters);
     }
 

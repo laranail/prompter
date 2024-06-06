@@ -9,9 +9,9 @@ namespace Simtabi\Laranail\Prompter\Validators;
  */
 class CheckboxFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null)
+    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'checkbox');
+        parent::__construct($errorMessage, 'checkbox', $replace, $locale);
     }
 
     public function validate(mixed $value): ?string

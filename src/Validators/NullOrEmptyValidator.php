@@ -9,9 +9,10 @@ namespace Simtabi\Laranail\Prompter\Validators;
  */
 class NullOrEmptyValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null)
+
+    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'null_or_empty');
+        parent::__construct($errorMessage, 'null_or_empty', $replace, $locale);
     }
 
     public function validate(mixed $value): ?string

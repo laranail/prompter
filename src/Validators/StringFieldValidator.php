@@ -12,13 +12,13 @@ class StringFieldValidator extends AbstractValidator
     protected int $minLength;
     protected int $maxLength;
 
-    public function __construct(int $minLength = 0, int $maxLength = 255, ?string $errorMessage = null)
+    public function __construct(int $minLength = 0, int $maxLength = 255, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
+        parent::__construct($errorMessage, 'string', $replace, $locale);
+
         $this->minLength = $minLength;
         $this->maxLength = $maxLength;
-        parent::__construct($errorMessage, 'string');
     }
-
     public function validate(mixed $value): ?string
     {
         $length = strlen($value);

@@ -11,9 +11,9 @@ class RadioFieldValidator extends AbstractValidator
 {
     protected array $options;
 
-    public function __construct(array $options, ?string $errorMessage = null)
+    public function __construct(array $options, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'radio');
+        parent::__construct($errorMessage, 'radio', $replace, $locale);
         $this->options = $options;
     }
 

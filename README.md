@@ -35,6 +35,7 @@ A Laravel package by `simtabi` that extends and adds new functionality to the `l
     - [Instantiation](docs/usage.md#Instantiation)
     - [Special Functions](docs/usage.md#special-functions)
     - [Building a Form](docs/usage.md#building-a-form)
+3. [Validation](docs/validation.md)
 3. [Development](#development)
 4. [Changelog](#changelog)
 5. [Contributing](#contributing)

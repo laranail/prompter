@@ -11,9 +11,9 @@ class SelectFieldValidator extends AbstractValidator
 {
     protected array $options;
 
-    public function __construct(array $options, ?string $errorMessage = null)
+    public function __construct(array $options, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'select');
+        parent::__construct($errorMessage, 'select', $replace, $locale);
         $this->options = $options;
     }
 

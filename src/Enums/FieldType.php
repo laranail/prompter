@@ -2,6 +2,31 @@
 
 namespace Simtabi\Laranail\Prompter\Enums;
 
+use Simtabi\Laranail\Prompter\Contracts\ValidatorInterface;
+use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
+use Simtabi\Laranail\Prompter\Services\FormField;
+use Simtabi\Laranail\Prompter\Validators\AlphanumericValidator;
+use Simtabi\Laranail\Prompter\Validators\AlphaValidator;
+use Simtabi\Laranail\Prompter\Validators\ArrayValidator;
+use Simtabi\Laranail\Prompter\Validators\CheckboxFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\ColorValidator;
+use Simtabi\Laranail\Prompter\Validators\DateFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\EmailFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\NullOrEmptyValidator;
+use Simtabi\Laranail\Prompter\Validators\NumberFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\ObjectValidator;
+use Simtabi\Laranail\Prompter\Validators\PasswordFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\PathFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\PhoneNumberValidator;
+use Simtabi\Laranail\Prompter\Validators\RadioFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\SelectFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\TextAreaFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\TextFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\TimeFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\UsernameValidator;
+use Simtabi\Laranail\Prompter\Validators\UUIDFieldValidator;
+use Simtabi\Laranail\Prompter\Validators\UuidOrIntegerOrSlugValidator;
+
 /**
  * Enum FieldType
  *
@@ -87,5 +112,80 @@ enum FieldType: string
     public function label(): string
     {
         return self::keysWithLabels()[$this->value] ?? $this->name;
+    }
+
+    /**
+     * Get the default validator for a given field type.
+     *
+     * @param self $type The type of the form field.
+     * @return ValidatorInterface
+     * @throws PrompterException
+     */
+    public static function getDefaultValidator(self $type): ValidatorInterface
+    {
+        return match ($type) {
+            self::TEXT => new TextFieldValidator(),
+            self::NUMBER => new NumberFieldValidator(),
+            self::EMAIL => new EmailFieldValidator(),
+            self::PASSWORD => new PasswordFieldValidator(),
+            self::TEXTAREA => new TextAreaFieldValidator(),
+            self::DATE => new DateFieldValidator(),
+            self::TIME => new TimeFieldValidator(),
+            self::SELECT => new SelectFieldValidator([]),
+            self::CHECKBOX => new CheckboxFieldValidator(),
+            self::RADIO => new RadioFieldValidator([]),
+            self::PATH => new PathFieldValidator(),
+            self::USERNAME => new UsernameValidator(),
+            self::PHONE => new PhoneNumberValidator(),
+            self::COLOR => new ColorValidator(),
+            self::NULL_OR_EMPTY => new NullOrEmptyValidator(),
+            self::ARRAY => new ArrayValidator(),
+            self::OBJECT => new ObjectValidator(),
+            self::UUID => new UUIDFieldValidator(),
+            self::ALPHA => new AlphaValidator(),
+            self::ALPHANUMERIC => new AlphanumericValidator(),
+            self::UUID_OR_INTEGER_OR_SLUG => new UuidOrIntegerOrSlugValidator(),
+            default => throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $type]),
+        };
+    }
+
+    /**
+     * Get the mapped validator method.
+     *
+     * @param FormField $formField
+     * @return string
+     * @throws PrompterException
+     */
+    public static function getValidatorMethod(FormField $formField): string
+    {
+        $methods = [
+            self::TEXT->value => 'text',
+            self::NUMBER->value => 'number',
+            self::EMAIL->value => 'email',
+            self::PASSWORD->value => 'password',
+            self::TEXTAREA->value => 'textarea',
+            self::DATE->value => 'date',
+            self::TIME->value => 'time',
+            self::SELECT->value => 'select',
+            self::CHECKBOX->value => 'checkbox',
+            self::RADIO->value => 'radio',
+            self::PATH->value => 'text',
+            self::USERNAME->value => 'text', // Assuming form method supports text for username
+            self::PHONE->value => 'text', // Assuming form method supports text for phone
+            self::COLOR->value => 'text', // Assuming form method supports text for color
+            self::NULL_OR_EMPTY->value => 'text', // Assuming form method supports text for null/empty
+            self::ARRAY->value => 'textarea', // Assuming form method supports textarea for array
+            self::OBJECT->value => 'textarea', // Assuming form method supports textarea for object
+            self::UUID->value => 'text', // Assuming form method supports text for uuid
+            self::ALPHA->value => 'text', // Assuming form method supports text for alpha
+            self::ALPHANUMERIC->value => 'text', // Assuming form method supports text for alphanumeric
+            self::UUID_OR_INTEGER_OR_SLUG->value => 'text', // Assuming form method supports text for uuid_or_integer_or_slug
+        ];
+
+        if (!isset($methods[$formField->type->value])) {
+            throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $formField->type->value]);
+        }
+
+        return $methods[$formField->type->value];
     }
 }
