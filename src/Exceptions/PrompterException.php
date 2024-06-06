@@ -1,0 +1,20 @@
+<?php declare(strict_types=1);
+
+namespace Simtabi\Laranail\Prompter\Exceptions;
+
+use Exception;
+
+class PrompterException extends Exception
+{
+
+    protected static function trans(string $key, array $variables = []): ?string
+    {
+        return trans("prompter::prompter.{$key}", $variables);
+    }
+
+    public static function triggerErrorMessage(string $key, array $variables = []): self
+    {
+        return new self(self::trans($key, $variables));
+    }
+
+}

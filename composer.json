@@ -1,0 +1,77 @@
+{
+    "name": "laranail/prompter",
+    "description": "A Laravel package by `simtabi` that extends and adds new functionality to `laravel/prompts`, providing a fluent API for crafting CLI forms and additional validators.\n",
+    "keywords": [
+        "Laravel",
+        "CLI",
+        "Command Line Interface",
+        "Prompts",
+        "Forms",
+        "Validators",
+        "Custom Validators",
+        "Fluent API",
+        "Chainable Interface",
+        "Laravel Package",
+        "PHP",
+        "laranail",
+        "Simtabi",
+        "Development Tools",
+        "Validation",
+        "Laravel Prompter",
+        "OOP",
+        "Object-Oriented Programming",
+        "Laravel CLI",
+        "Artisan Commands"
+    ],
+    "homepage": "https://github.com/laranail/prompter",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Imani Manyara",
+            "email": "imani@simtabi.com",
+            "role": "Developer",
+            "homepage": "https://simtabi.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "illuminate/support": ">=8.0",
+        "laravel/prompts": ">=0.1.23"
+    },
+    "require-dev": {
+        "orchestra/testbench": ">=6.0",
+        "phpunit/phpunit": ">=9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Simtabi\\Laranail\\Prompter\\": "src"
+        },
+        "files" : [
+            "helpers/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Simtabi\\Laranail\\Prompter\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Simtabi\\Laranail\\Prompter\\Providers\\PrompterServiceProvider"
+            ],
+            "aliases": {
+                "Prompter": "Simtabi\\Laranail\\Prompter\\Facades\\PrompterFacade"
+            }
+        }
+    }
+}
