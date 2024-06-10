@@ -20,7 +20,7 @@ use Laravel\Prompts\Table;
 use Laravel\Prompts\TextareaPrompt;
 use Laravel\Prompts\TextPrompt;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
-use Simtabi\Laranail\Prompter\Services\Components\ContextService;
+use Simtabi\Laranail\Prompter\Services\Components\ContextBuilderService;
 
 /**
  * Class PromptManager
@@ -85,9 +85,9 @@ class PromptService
     protected array $methods;
 
     /**
-     * @var ContextService
+     * @var ContextBuilderService
      */
-    protected ContextService $contextBuilder;
+    protected ContextBuilderService $contextBuilder;
 
     /**
      * Constructor to initialize prompt methods and context service.
@@ -152,7 +152,7 @@ class PromptService
             },
         ];
 
-        $this->contextBuilder = new ContextService();
+        $this->contextBuilder = new ContextBuilderService();
     }
 
     /**
@@ -176,9 +176,9 @@ class PromptService
     /**
      * Provides access to context-related methods.
      *
-     * @return ContextService An instance of ContextBuilder with context-related methods.
+     * @return ContextBuilderService An instance of ContextBuilder with context-related methods.
      */
-    public function context(): ContextService
+    public function context(): ContextBuilderService
     {
         return $this->contextBuilder;
     }

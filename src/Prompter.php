@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Support\Collection;
 use Laravel\Prompts\FormBuilder;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
-use Simtabi\Laranail\Prompter\Services\Components\ContextService;
+use Simtabi\Laranail\Prompter\Services\Components\ContextBuilderService;
 use Simtabi\Laranail\Prompter\Services\PromptService;
 
 /**
@@ -91,9 +91,9 @@ class Prompter
     /**
      * Provides access to context-related methods.
      *
-     * @return ContextService
+     * @return ContextBuilderService
      */
-    public function context(): ContextService
+    public function context(): ContextBuilderService
     {
         return $this->promptManager->context();
     }

@@ -7,32 +7,54 @@ use Simtabi\Laranail\Prompter\Enums\ContextType;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
 
 /**
- * Class ContextBuilder
+ * Class ContextService
  *
  * This class manages context-related methods.
+ *
+ * @method void note(string $message, ?string $type = null)
+ * @method void error(string $message)
+ * @method void warning(string $message)
+ * @method void alert(string $message)
+ * @method void info(string $message)
+ * @method void intro(string $message)
+ * @method void outro(string $message)
  */
-class ContextService
+class ContextBuilderService
 {
     /**
      * @var array<string, callable>
      */
-    private array $contexts;
+    private array $contexts = [];
 
     /**
      * Constructor to initialize context methods.
      */
     public function __construct()
     {
-        $this->contexts = array_reduce(
-            ContextType::cases(),
-            function ($carry, ContextType $type) {
-                $carry[$type->value] = function (string $message) use ($type): void {
-                    (new Note($message, $type->value))->display();
-                };
-                return $carry;
-            },
-            []
-        );
+        $this->initializeContexts();
+    }
+
+    /**
+     * Initialize context methods based on ContextType enum.
+     */
+    private function initializeContexts(): void
+    {
+        foreach (ContextType::cases() as $type) {
+            $this->contexts[$type->value] = $this->createContextMethod($type);
+        }
+    }
+
+    /**
+     * Create a context method.
+     *
+     * @param ContextType $type
+     * @return callable
+     */
+    private function createContextMethod(ContextType $type): callable
+    {
+        return function (string $message) use ($type): void {
+            (new Note($message, $type->value))->display();
+        };
     }
 
     /**
