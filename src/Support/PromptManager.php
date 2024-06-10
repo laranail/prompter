@@ -119,7 +119,7 @@ class PromptManager
                 return (new ConfirmPrompt($label, $default, $yes, $no, $required, $validate, $hint))->prompt();
             },
 
-            self::PAUSE => function (string $message = 'Press enter to continue...') use ($pausePrompt): bool {
+            self::PAUSE => function (string $message = 'Press enter to continue...'): bool {
                 return (new PausePrompt($message))->prompt();
             },
 
