@@ -92,98 +92,67 @@ class PromptManager
     /**
      * Constructor to initialize prompt methods and context service.
      *
-     * @param TextPrompt $textPrompt
-     * @param TextareaPrompt $textareaPrompt
-     * @param PasswordPrompt $passwordPrompt
-     * @param SelectPrompt $selectPrompt
-     * @param MultiSelectPrompt $multiSelectPrompt
-     * @param ConfirmPrompt $confirmPrompt
-     * @param PausePrompt $pausePrompt
-     * @param SuggestPrompt $suggestPrompt
-     * @param SearchPrompt $searchPrompt
-     * @param MultiSearchPrompt $multiSearchPrompt
-     * @param Spinner $spinner
-     * @param Table $table
-     * @param Progress $progress
-     * @param FormBuilder $formBuilder
-     * @param ContextBuilder $contextBuilder
      */
-    public function __construct(
-        TextPrompt $textPrompt,
-        TextareaPrompt $textareaPrompt,
-        PasswordPrompt $passwordPrompt,
-        SelectPrompt $selectPrompt,
-        MultiSelectPrompt $multiSelectPrompt,
-        ConfirmPrompt $confirmPrompt,
-        PausePrompt $pausePrompt,
-        SuggestPrompt $suggestPrompt,
-        SearchPrompt $searchPrompt,
-        MultiSearchPrompt $multiSearchPrompt,
-        Spinner $spinner,
-        Table $table,
-        Progress $progress,
-        FormBuilder $formBuilder,
-        ContextBuilder $contextBuilder
-    ) {
+    public function __construct() {
         $this->methods = [
             self::TEXT => function (string $label, string $placeholder = '', string $default = '', bool|string $required = false, mixed $validate = null, string $hint = '') use ($textPrompt): string {
-                return (new $textPrompt($label, $placeholder, $default, $required, $validate, $hint))->prompt();
+                return (new TextPrompt($label, $placeholder, $default, $required, $validate, $hint))->prompt();
             },
 
             self::TEXTAREA => function (string $label, string $placeholder = '', string $default = '', bool|string $required = false, ?Closure $validate = null, string $hint = '', int $rows = 5) use ($textareaPrompt): string {
-                return (new $textareaPrompt($label, $placeholder, $default, $required, $validate, $hint, $rows))->prompt();
+                return (new TextareaPrompt($label, $placeholder, $default, $required, $validate, $hint, $rows))->prompt();
             },
 
             self::PASSWORD => function (string $label, string $placeholder = '', bool|string $required = false, mixed $validate = null, string $hint = '') use ($passwordPrompt): string {
-                return (new $passwordPrompt($label, $placeholder, $required, $validate, $hint))->prompt();
+                return (new PasswordPrompt($label, $placeholder, $required, $validate, $hint))->prompt();
             },
 
             self::SELECT => function (string $label, array|Collection $options, int|string|null $default = null, int $scroll = 5, mixed $validate = null, string $hint = '', bool|string $required = true) use ($selectPrompt): int|string {
-                return (new $selectPrompt($label, $options, $default, $scroll, $validate, $hint, $required))->prompt();
+                return (new SelectPrompt($label, $options, $default, $scroll, $validate, $hint, $required))->prompt();
             },
 
             self::MULTISELECT => function (string $label, array|Collection $options, array|Collection $default = [], int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = 'Use the space bar to select options.') use ($multiSelectPrompt): array {
-                return (new $multiSelectPrompt($label, $options, $default, $scroll, $required, $validate, $hint))->prompt();
+                return (new MultiSelectPrompt($label, $options, $default, $scroll, $required, $validate, $hint))->prompt();
             },
 
             self::CONFIRM => function (string $label, bool $default = true, string $yes = 'Yes', string $no = 'No', bool|string $required = false, mixed $validate = null, string $hint = '') use ($confirmPrompt): bool {
-                return (new $confirmPrompt($label, $default, $yes, $no, $required, $validate, $hint))->prompt();
+                return (new ConfirmPrompt($label, $default, $yes, $no, $required, $validate, $hint))->prompt();
             },
 
             self::PAUSE => function (string $message = 'Press enter to continue...') use ($pausePrompt): bool {
-                return (new $pausePrompt($message))->prompt();
+                return (new PausePrompt($message))->prompt();
             },
 
             self::SUGGEST => function (string $label, array|Collection|Closure $options, string $placeholder = '', string $default = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = '') use ($suggestPrompt): string {
-                return (new $suggestPrompt($label, $options, $placeholder, $default, $scroll, $required, $validate, $hint))->prompt();
+                return (new SuggestPrompt($label, $options, $placeholder, $default, $scroll, $required, $validate, $hint))->prompt();
             },
 
             self::SEARCH => function (string $label, Closure $options, string $placeholder = '', int $scroll = 5, mixed $validate = null, string $hint = '', bool|string $required = true) use ($searchPrompt): int|string {
-                return (new $searchPrompt($label, $options, $placeholder, $scroll, $validate, $hint, $required))->prompt();
+                return (new SearchPrompt($label, $options, $placeholder, $scroll, $validate, $hint, $required))->prompt();
             },
 
             self::MULTISEARCH => function (string $label, Closure $options, string $placeholder = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = 'Use the space bar to select options.') use ($multiSearchPrompt): array {
-                return (new $multiSearchPrompt($label, $options, $placeholder, $scroll, $required, $validate, $hint))->prompt();
+                return (new MultiSearchPrompt($label, $options, $placeholder, $scroll, $required, $validate, $hint))->prompt();
             },
 
             self::SPIN => function (Closure $callback, string $message = '') use ($spinner): mixed {
-                return (new $spinner($message))->spin($callback);
+                return (new Spinner($message))->spin($callback);
             },
 
             self::TABLE => function (array|Collection $headers = [], array|Collection|null $rows = null) use ($table): void {
-                (new $table($headers, $rows))->display();
+                (new Table($headers, $rows))->display();
             },
 
             self::PROGRESS => function (string $label, iterable|int $steps, ?Closure $callback = null, string $hint = '') use ($progress): Progress|array {
-                return (new $progress($label, $steps, $hint))->map($callback);
+                return (new Progress($label, $steps, $hint))->map($callback);
             },
 
-            self::FORM => function () use ($formBuilder): FormBuilder {
-                return $formBuilder;
+            self::FORM => function (): FormBuilder {
+                return new FormBuilder();
             },
         ];
 
-        $this->contextBuilder = $contextBuilder;
+        $this->contextBuilder = new ContextBuilder();
     }
 
     /**

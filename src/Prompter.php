@@ -4,20 +4,7 @@ namespace Simtabi\Laranail\Prompter;
 
 use Closure;
 use Illuminate\Support\Collection;
-use Laravel\Prompts\ConfirmPrompt;
 use Laravel\Prompts\FormBuilder;
-use Laravel\Prompts\MultiSearchPrompt;
-use Laravel\Prompts\MultiSelectPrompt;
-use Laravel\Prompts\PasswordPrompt;
-use Laravel\Prompts\PausePrompt;
-use Laravel\Prompts\Progress;
-use Laravel\Prompts\SearchPrompt;
-use Laravel\Prompts\SelectPrompt;
-use Laravel\Prompts\Spinner;
-use Laravel\Prompts\SuggestPrompt;
-use Laravel\Prompts\Table;
-use Laravel\Prompts\TextareaPrompt;
-use Laravel\Prompts\TextPrompt;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Prompter\Support\ContextBuilder;
 use Simtabi\Laranail\Prompter\Support\PromptManager;
@@ -53,24 +40,8 @@ class Prompter
      */
     private function __construct()
     {
-        $this->promptManager = new PromptManager(
-            new TextPrompt(),
-            new TextareaPrompt(),
-            new PasswordPrompt(),
-            new SelectPrompt(),
-            new MultiSelectPrompt(),
-            new ConfirmPrompt(),
-            new PausePrompt(),
-            new SuggestPrompt(),
-            new SearchPrompt(),
-            new MultiSearchPrompt(),
-            new Spinner(),
-            new Table(),
-            new Progress(),
-            new FormBuilder(),
-            new ContextBuilder()
-        );
-        $this->result = null;
+        $this->promptManager = new PromptManager();
+        $this->result        = null;
     }
 
     /**
