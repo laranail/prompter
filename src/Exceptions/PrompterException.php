@@ -17,4 +17,9 @@ class PrompterException extends Exception
         return new self(self::trans($key, $variables));
     }
 
+    public static function badMethodCall(array $variables = []): self
+    {
+        return self::triggerErrorMessage('bad_method_call', $variables);
+    }
+
 }

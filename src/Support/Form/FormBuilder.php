@@ -1,33 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Laranail\Prompter\Services;
+namespace Simtabi\Laranail\Prompter\Support\Form;
 
+use Illuminate\Filesystem\Filesystem;
 use Laravel\Prompts\FormBuilder as PromptsFormBuilder;
-use Simtabi\Laranail\Prompter\Contracts\ValidatorInterface;
 use Simtabi\Laranail\Prompter\Enums\FieldType;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
-use Simtabi\Laranail\Prompter\Validators\{AlphanumericValidator,
-    AlphaValidator,
-    ArrayValidator,
-    ColorValidator,
-    NullOrEmptyValidator,
-    ObjectValidator,
-    PhoneNumberValidator,
-    TextFieldValidator,
-    NumberFieldValidator,
-    EmailFieldValidator,
-    PathFieldValidator,
-    PasswordFieldValidator,
-    TextAreaFieldValidator,
-    DateFieldValidator,
-    TimeFieldValidator,
-    SelectFieldValidator,
-    CheckboxFieldValidator,
-    RadioFieldValidator,
-    UsernameValidator,
-    UUIDFieldValidator,
-    UuidOrIntegerOrSlugValidator};
-use Illuminate\Filesystem\Filesystem;
 
 /**
  * Class FormBuilder
@@ -56,11 +34,11 @@ class FormBuilder
      * Add a field to the form.
      *
      * @param string $name The name of the form field.
-     * @param FormField $formField The configuration for the form field.
+     * @param FormFieldBuilder $formField The configuration for the form field.
      * @return $this
      * @throws PrompterException
      */
-    public function addField(string $name, FormField $formField): self
+    public function addField(string $name, FormFieldBuilder $formField): self
     {
         if (!$formField->validator && !$formField->customValidator) {
             $formField->validator = FieldType::getDefaultValidator($formField->type);
@@ -87,10 +65,10 @@ class FormBuilder
      * Add a field to the form dynamically.
      *
      * @param string $name The name of the form field.
-     * @param FormField $formField The configuration for the form field.
+     * @param FormFieldBuilder $formField The configuration for the form field.
      * @throws PrompterException
      */
-    protected function addFieldToForm(string $name, FormField $formField): void
+    protected function addFieldToForm(string $name, FormFieldBuilder $formField): void
     {
         $parameters = [
             'label' => $formField->label,

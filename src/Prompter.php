@@ -4,9 +4,23 @@ namespace Simtabi\Laranail\Prompter;
 
 use Closure;
 use Illuminate\Support\Collection;
+use Laravel\Prompts\ConfirmPrompt;
 use Laravel\Prompts\FormBuilder;
+use Laravel\Prompts\MultiSearchPrompt;
+use Laravel\Prompts\MultiSelectPrompt;
+use Laravel\Prompts\PasswordPrompt;
+use Laravel\Prompts\PausePrompt;
+use Laravel\Prompts\Progress;
+use Laravel\Prompts\SearchPrompt;
+use Laravel\Prompts\SelectPrompt;
+use Laravel\Prompts\Spinner;
+use Laravel\Prompts\SuggestPrompt;
+use Laravel\Prompts\Table;
+use Laravel\Prompts\TextareaPrompt;
+use Laravel\Prompts\TextPrompt;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
-use Simtabi\Laranail\Prompter\Services\PromptManager;
+use Simtabi\Laranail\Prompter\Support\ContextBuilder;
+use Simtabi\Laranail\Prompter\Support\PromptManager;
 
 /**
  * Class Prompter
@@ -24,21 +38,12 @@ use Simtabi\Laranail\Prompter\Services\PromptManager;
  * @method static self search(string $label, Closure $options, string $placeholder = '', int $scroll = 5, mixed $validate = null, string $hint = '', bool|string $required = true)
  * @method static self multisearch(string $label, Closure $options, string $placeholder = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = 'Use the space bar to select options.')
  * @method static self spin(Closure $callback, string $message = '')
- * @method static self note(string $message, ?string $type = null)
- * @method static self error(string $message)
- * @method static self warning(string $message)
- * @method static self alert(string $message)
- * @method static self info(string $message)
- * @method static self intro(string $message)
- * @method static self outro(string $message)
  * @method static self table(array|Collection $headers = [], array|Collection|null $rows = null)
  * @method static self progress(string $label, iterable|int $steps, ?Closure $callback = null, string $hint = '')
  */
 class Prompter
 {
-
     protected PromptManager $promptManager;
-
     protected mixed $result;
 
     private static ?self $instance = null;
@@ -48,16 +53,32 @@ class Prompter
      */
     private function __construct()
     {
-        $this->promptManager = new PromptManager();
+        $this->promptManager = new PromptManager(
+            new TextPrompt(),
+            new TextareaPrompt(),
+            new PasswordPrompt(),
+            new SelectPrompt(),
+            new MultiSelectPrompt(),
+            new ConfirmPrompt(),
+            new PausePrompt(),
+            new SuggestPrompt(),
+            new SearchPrompt(),
+            new MultiSearchPrompt(),
+            new Spinner(),
+            new Table(),
+            new Progress(),
+            new FormBuilder(),
+            new ContextBuilder()
+        );
         $this->result = null;
     }
 
     /**
-     * Create a new instance of Prompter.
+     * Get or create a singleton instance of Prompter.
      *
-     * @return Prompter|null
+     * @return Prompter
      */
-    public static function getInstance(): ?self
+    public static function getInstance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -71,11 +92,15 @@ class Prompter
      * @param string $method The name of the method.
      * @param array $arguments The arguments to pass to the method.
      * @return self
-     * @throws PrompterException
+     * @throws PrompterException If the method does not exist.
      */
     public function __call(string $method, array $arguments): self
     {
-        $this->result = $this->promptManager->__call($method, $arguments);
+        if (method_exists($this->promptManager, $method)) {
+            $this->result = $this->promptManager->$method(...$arguments);
+        } else {
+            throw PrompterException::triggerErrorMessage('method_does_not_exist', ['method' => $method, 'class' => static::class]);
+        }
         return $this;
     }
 
@@ -85,17 +110,21 @@ class Prompter
      * @param string $method The name of the method.
      * @param array $arguments The arguments to pass to the method.
      * @return self
-     *
      * @throws PrompterException If the method does not exist.
      */
     public static function __callStatic(string $method, array $arguments): self
     {
-        $instance = new self();
-        if (!method_exists($instance->promptManager, $method)) {
-            throw PrompterException::triggerErrorMessage('method_does_not_exist', ['method' => $method, 'class' => static::class]);
-        }
-        $instance->result = $instance->promptManager->$method(...$arguments);
-        return $instance;
+        return self::getInstance()->__call($method, $arguments);
+    }
+
+    /**
+     * Provides access to context-related methods.
+     *
+     * @return ContextBuilder
+     */
+    public function context(): ContextBuilder
+    {
+        return $this->promptManager->context();
     }
 
     /**
@@ -118,15 +147,13 @@ class Prompter
         return $this->promptManager;
     }
 
-
     /**
-     * Create a new FormBuilder instance.
+     * Return the form builder.
      *
      * @return FormBuilder
      */
-    public static function form(): FormBuilder
+    public function form(): FormBuilder
     {
-        return (new PromptManager())->form();
+        return $this->promptManager->form();
     }
-
 }
