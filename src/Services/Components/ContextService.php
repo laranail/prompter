@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Laranail\Prompter\Support;
+namespace Simtabi\Laranail\Prompter\Services\Components;
 
-use BadMethodCallException;
 use Laravel\Prompts\Note;
 use Simtabi\Laranail\Prompter\Enums\ContextType;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
@@ -12,7 +11,7 @@ use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
  *
  * This class manages context-related methods.
  */
-class ContextBuilder
+class ContextService
 {
     /**
      * @var array<string, callable>

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Laranail\Prompter\Support\Form;
+namespace Simtabi\Laranail\Prompter\Services\FormBuilder;
 
 use Illuminate\Filesystem\Filesystem;
 use Laravel\Prompts\FormBuilder as PromptsFormBuilder;
@@ -12,33 +12,30 @@ use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
  *
  * Builds a form dynamically with various input fields.
  */
-class FormBuilder
+class FormBuilderService
 {
     protected PromptsFormBuilder $form;
-    protected Filesystem $files;
     protected array $fields = [];
 
     /**
      * FormBuilder constructor.
      *
      * @param PromptsFormBuilder $form The form instance.
-     * @param Filesystem $files The filesystem instance.
      */
-    public function __construct(PromptsFormBuilder $form, Filesystem $files)
+    public function __construct(PromptsFormBuilder $form)
     {
-        $this->form  = $form;
-        $this->files = $files;
+        $this->form = $form;
     }
 
     /**
      * Add a field to the form.
      *
      * @param string $name The name of the form field.
-     * @param FormFieldBuilder $formField The configuration for the form field.
+     * @param FormFieldService $formField The configuration for the form field.
      * @return $this
      * @throws PrompterException
      */
-    public function addField(string $name, FormFieldBuilder $formField): self
+    public function addField(string $name, FormFieldService $formField): self
     {
         if (!$formField->validator && !$formField->customValidator) {
             $formField->validator = FieldType::getDefaultValidator($formField->type);
@@ -65,10 +62,10 @@ class FormBuilder
      * Add a field to the form dynamically.
      *
      * @param string $name The name of the form field.
-     * @param FormFieldBuilder $formField The configuration for the form field.
+     * @param FormFieldService $formField The configuration for the form field.
      * @throws PrompterException
      */
-    protected function addFieldToForm(string $name, FormFieldBuilder $formField): void
+    protected function addFieldToForm(string $name, FormFieldService $formField): void
     {
         $parameters = [
             'label' => $formField->label,

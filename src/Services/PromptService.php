@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Laranail\Prompter\Support;
+namespace Simtabi\Laranail\Prompter\Services;
 
+use BadMethodCallException;
 use Closure;
 use Illuminate\Support\Collection;
-use BadMethodCallException;
 use Laravel\Prompts\ConfirmPrompt;
 use Laravel\Prompts\FormBuilder;
 use Laravel\Prompts\MultiSearchPrompt;
@@ -20,7 +20,7 @@ use Laravel\Prompts\Table;
 use Laravel\Prompts\TextareaPrompt;
 use Laravel\Prompts\TextPrompt;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
-use Simtabi\Laranail\Prompter\Enums\ContextType;
+use Simtabi\Laranail\Prompter\Services\Components\ContextService;
 
 /**
  * Class PromptManager
@@ -62,7 +62,7 @@ use Simtabi\Laranail\Prompter\Enums\ContextType;
  * @method Progress|array progress(string $label, iterable|int $steps, ?Closure $callback = null, string $hint = '')
  * @method FormBuilder form()
  */
-class PromptManager
+class PromptService
 {
     public const string TEXT = 'text';
     public const string TEXTAREA = 'textarea';
@@ -85,9 +85,9 @@ class PromptManager
     protected array $methods;
 
     /**
-     * @var ContextBuilder
+     * @var ContextService
      */
-    protected ContextBuilder $contextBuilder;
+    protected ContextService $contextBuilder;
 
     /**
      * Constructor to initialize prompt methods and context service.
@@ -152,7 +152,7 @@ class PromptManager
             },
         ];
 
-        $this->contextBuilder = new ContextBuilder();
+        $this->contextBuilder = new ContextService();
     }
 
     /**
@@ -176,9 +176,9 @@ class PromptManager
     /**
      * Provides access to context-related methods.
      *
-     * @return ContextBuilder An instance of ContextBuilder with context-related methods.
+     * @return ContextService An instance of ContextBuilder with context-related methods.
      */
-    public function context(): ContextBuilder
+    public function context(): ContextService
     {
         return $this->contextBuilder;
     }

@@ -6,8 +6,8 @@ use Closure;
 use Illuminate\Support\Collection;
 use Laravel\Prompts\FormBuilder;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
-use Simtabi\Laranail\Prompter\Support\ContextBuilder;
-use Simtabi\Laranail\Prompter\Support\PromptManager;
+use Simtabi\Laranail\Prompter\Services\Components\ContextService;
+use Simtabi\Laranail\Prompter\Services\PromptService;
 
 /**
  * Class Prompter
@@ -30,7 +30,7 @@ use Simtabi\Laranail\Prompter\Support\PromptManager;
  */
 class Prompter
 {
-    protected PromptManager $promptManager;
+    protected PromptService $promptManager;
     protected mixed $result;
 
     private static ?self $instance = null;
@@ -40,7 +40,7 @@ class Prompter
      */
     private function __construct()
     {
-        $this->promptManager = new PromptManager();
+        $this->promptManager = new PromptService();
         $this->result        = null;
     }
 
@@ -91,9 +91,9 @@ class Prompter
     /**
      * Provides access to context-related methods.
      *
-     * @return ContextBuilder
+     * @return ContextService
      */
-    public function context(): ContextBuilder
+    public function context(): ContextService
     {
         return $this->promptManager->context();
     }
@@ -111,9 +111,9 @@ class Prompter
     /**
      * Get the PromptManager instance.
      *
-     * @return PromptManager
+     * @return PromptService
      */
-    public function getPrompts(): PromptManager
+    public function getPrompts(): PromptService
     {
         return $this->promptManager;
     }

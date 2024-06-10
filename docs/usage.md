@@ -53,58 +53,57 @@ $prompter->getPrompts();
 ```
 
 ## Building a Form
-To build a form, you can use the `form` method of the `Prompter` instance. This method returns a `FormBuilder` instance that you can use to create a form.
+To build a form, you can use the `form` method of the `Prompter` instance. This method returns a `FormBuilderService` instance that you can use to create a form.
 
-1. **FormBuilder**
+1. **FormBuilderService**
 
-The `FormBuilder` class is the core class of the `Prompter` package. It provides a fluent API for creating complex CLI forms with ease.
+The `FormBuilderService` class is the core class of the `Prompter` package. It provides a fluent API for creating complex CLI forms with ease.
 
-2. **FormField**
+2. **FormFieldService**
 
-The `FormField` class provides for a fluent way to create form fields in the CLI form. It is used internally by the `FormBuilder` class to manage form fields.
+The `FormFieldService` class provides for a fluent way to create form fields in the CLI form. It is used internally by the `FormFieldService` class to manage form fields.
 
 
 ```php
-use Simtabi\Laranail\Prompter\Prompter;
-use Simtabi\Laranail\Prompter\FormBuilder;
-use Simtabi\Laranail\Prompter\FormField;
-use Simtabi\Laranail\Prompter\FieldType;
-
 // Instantiate required class objects
-$prompter    = Prompter::getInstance();
-$form        = $prompter->form();
-$formBuilder = new FormBuilder($form, $this->files);
+use Simtabi\Laranail\Prompter\Enums\FieldType;
+use Simtabi\Laranail\Prompter\Prompter;
+use Simtabi\Laranail\Prompter\Services\FormBuilder\FormBuilderService;
+use Simtabi\Laranail\Prompter\Services\FormBuilder\FormFieldService;
+
+// Instantiate the Prompter instance, and pas the form instance to it.
+$formBuilder = new FormBuilderService($prompter->form());
 
 // Fluently chain the methods to create a form with multiple fields from the $formBuilder instance
 $formBuilder
-    ->addField('className', (new FormField(FieldType::TEXT))
+    ->addField('className', (new FormFieldService(FieldType::TEXT))
         ->label('What is the class name of the setting class?')
         ->placeholder('Class Name')
         ->required(true)
         ->hint('Enter the class name. Leave blank to use the default.'))
-    ->addField('groupIdentifier', (new FormField(FieldType::UUID_OR_INTEGER_OR_SLUG))
+    ->addField('groupIdentifier', (new FormFieldService(FieldType::UUID_OR_INTEGER_OR_SLUG))
         ->label('Enter the group identifier (slug/id).')
         ->placeholder('Group Identifier')
         ->default('application-settings')
         ->required(true)
         ->hint('Enter the group identifier. Leave blank to use the default.'))
-    ->addField('subgroupIdentifier', (new FormField(FieldType::UUID_OR_INTEGER_OR_SLUG))
+    ->addField('subgroupIdentifier', (new FormFieldService(FieldType::UUID_OR_INTEGER_OR_SLUG))
         ->label('Enter the subgroup identifier (slug/id).')
         ->placeholder('Subgroup Identifier')
         ->default('general-settings')
         ->required(false)
         ->hint('Enter the subgroup identifier. Leave blank to use the default.'))
-    ->addField('ownerableType', (new FormField(FieldType::TEXT))
+    ->addField('ownerableType', (new FormFieldService(FieldType::TEXT))
         ->label('Enter the Owner Type.')
         ->placeholder('Owner Type')
         ->required(true)
         ->hint('Enter the Owner Type.'))
-    ->addField('ownerableId', (new FormField(FieldType::UUID))
+    ->addField('ownerableId', (new FormFieldService(FieldType::UUID))
         ->label('Enter the Owner Id (UUID).')
         ->placeholder('Owner Id')
         ->required(true)
         ->hint('Enter the Owner Id (UUID).'))
-    ->addField('namespacePath', (new FormField(FieldType::TEXT))
+    ->addField('namespacePath', (new FormFieldService(FieldType::TEXT))
         ->label('Enter the (namespace) path to write the setting class file to')
         ->placeholder('Namespace Path')
         ->default($this->resolveSettingsPath())
@@ -112,7 +111,7 @@ $formBuilder
         ->hint('Enter the (namespace) path. Leave blank to use the default.')
         ->validator(new PathFieldValidator()))
 
-    ->addField('tenantId', (new FormField(FieldType::UUID))
+    ->addField('tenantId', (new FormFieldService(FieldType::UUID))
         ->label('Enter the Tenant ID (UUID)')
         ->placeholder('Tenant ID')
         ->required(false)

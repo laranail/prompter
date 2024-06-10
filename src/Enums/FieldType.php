@@ -4,7 +4,7 @@ namespace Simtabi\Laranail\Prompter\Enums;
 
 use Simtabi\Laranail\Prompter\Contracts\ValidatorInterface;
 use Simtabi\Laranail\Prompter\Exceptions\PrompterException;
-use Simtabi\Laranail\Prompter\Support\Form\FormFieldBuilder;
+use Simtabi\Laranail\Prompter\Services\FormBuilder\FormFieldService;
 use Simtabi\Laranail\Prompter\Validators\AlphanumericValidator;
 use Simtabi\Laranail\Prompter\Validators\AlphaValidator;
 use Simtabi\Laranail\Prompter\Validators\ArrayValidator;
@@ -152,11 +152,11 @@ enum FieldType: string
     /**
      * Get the mapped validator method.
      *
-     * @param FormFieldBuilder $formField
+     * @param FormFieldService $formField
      * @return string
      * @throws PrompterException
      */
-    public static function getValidatorMethod(FormFieldBuilder $formField): string
+    public static function getValidatorMethod(FormFieldService $formField): string
     {
         $methods = [
             self::TEXT->value => 'text',

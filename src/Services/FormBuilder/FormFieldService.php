@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Simtabi\Laranail\Prompter\Support\Form;
+namespace Simtabi\Laranail\Prompter\Services\FormBuilder;
 
 use Closure;
 use Simtabi\Laranail\Prompter\Contracts\ValidatorInterface;
@@ -11,7 +11,7 @@ use Simtabi\Laranail\Prompter\Enums\FieldType;
  *
  * Represents a form field configuration with method chaining.
  */
-class FormFieldBuilder
+class FormFieldService
 {
     public FieldType $type;
     public string $label = '';
